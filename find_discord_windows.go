@@ -86,30 +86,17 @@ func ParseDiscord(p, branch string) *DiscordInstall {
 func FindDiscords() []any {
 	var discords []any
 
-	roots := []string{
-		os.Getenv("LOCALAPPDATA"),
-		os.Getenv("ProgramFiles"),
-		os.Getenv("ProgramFiles(x86)"),
-	}
-	if roots[0] == "" {
+	appData := os.Getenv("LOCALAPPDATA")
+	if appData == "" {
 		Log.Error("%LOCALAPPDATA% is empty???????")
+		return discords
 	}
 
-	seen := make(map[string]bool)
-	for _, root := range roots {
-		if root == "" {
-			continue
-		}
-		for branch, dirname := range windowsNames {
-			p := path.Join(root, dirname)
-			if seen[p] {
-				continue
-			}
-			seen[p] = true
-			if discord := ParseDiscord(p, branch); discord != nil {
-				Log.Debug("Found Discord install at ", p)
-				discords = append(discords, discord)
-			}
+	for branch, dirname := range windowsNames {
+		p := path.Join(appData, dirname)
+		if discord := ParseDiscord(p, branch); discord != nil {
+			Log.Debug("Found Discord install at ", p)
+			discords = append(discords, discord)
 		}
 	}
 	return discords
