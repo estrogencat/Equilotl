@@ -158,38 +158,10 @@ jobs:
           mv Equilotl Equilotl.app/Contents/MacOS/Equilotl
           cp macos/icon.icns Equilotl.app/Contents/Resources/icon.icns
 
-      - name: Import signing certificate
-        env:
-          CSC_LINK: ${{ secrets.APPLE_SIGNING_CERT }}
-          CSC_KEY_PASSWORD: ${{ secrets.APPLE_SIGNING_CERT_PASSWORD }}
+      - name: Ad-hoc sign the executables
         run: |
-          echo "$CSC_LINK" | base64 --decode > certificate.p12
-          security create-keychain -p "" build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p "" build.keychain
-          security import certificate.p12 -k build.keychain -P "$CSC_KEY_PASSWORD" -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" build.keychain
-          rm certificate.p12
-
-      - name: Sign the executables
-        run: |
-          codesign --force --options runtime --sign "Developer ID Application" Equilotl.app/Contents/MacOS/Equilotl
-          codesign --force --options runtime --sign "Developer ID Application" Equilotl.app
-          codesign --force --options runtime --sign "Developer ID Application" ${{ matrix.cli_name }}
-
-      - name: Notarize the executables
-        env:
-          API_KEY: ${{ secrets.APPLE_API_KEY }}
-          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
-          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
-        run: |
-          echo "$API_KEY" > apple.p8
-          ditto -c -k --keepParent Equilotl.app Equilotl-notarize.zip
-          ditto -c -k ${{ matrix.cli_name }} EquilotlCli-notarize.zip
-          xcrun notarytool submit Equilotl-notarize.zip --key apple.p8 --key-id "$APPLE_API_KEY_ID" --issuer "$APPLE_API_ISSUER" --wait
-          xcrun stapler staple Equilotl.app
-          xcrun notarytool submit EquilotlCli-notarize.zip --key apple.p8 --key-id "$APPLE_API_KEY_ID" --issuer "$APPLE_API_ISSUER" --wait
-          rm apple.p8 Equilotl-notarize.zip EquilotlCli-notarize.zip
+          codesign --force --deep --sign - Equilotl.app
+          codesign --force --sign - ${{ matrix.cli_name }}
 
       - name: Create final zip
         run: zip -r ${{ matrix.gui_name }} Equilotl.app
