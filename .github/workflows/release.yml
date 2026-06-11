@@ -84,6 +84,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: Equilotl-linux
+          retention-days: 1
           path: |
             Equilotl-x11
             Equilotl-wayland
@@ -170,6 +171,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.artifact_name }}
+          retention-days: 1
           path: |
             ${{ matrix.gui_name }}
             ${{ matrix.cli_name }}
@@ -226,6 +228,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: Equilotl-windows
+          retention-days: 1
           path: |
             Equilotl.exe
             EquilotlCli.exe
@@ -270,6 +273,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'latest' }}
           token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true
           make_latest: ${{ !contains(github.ref_name, '-') }}
