@@ -1,0 +1,27 @@
+name: Daily repository sync
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch: 
+  
+jobs:
+  sync-fork:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Hide Sensitive Inputs
+        uses: levibostian/action-hide-sensitive-inputs@v1
+        
+      - name: Checkout Fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+          token: ${{ secrets.PAT }}
+        
+      - name: Sync Fork with Upstream
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+        run: |
+          gh repo sync ${{ github.repository }} -b ${{ github.ref_name }}
