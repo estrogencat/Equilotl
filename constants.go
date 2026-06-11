@@ -13,7 +13,7 @@ import (
 
 const ReleaseUrl = "https://api.github.com/repos/estrogencat/Equicord-RPCStats/releases/latest"
 const ReleaseUrlFallback = "https://equicord.org/releases/equicord"
-const InstallerReleaseUrl = "https://api.github.com/repos/Equicord/Equilotl/releases/latest"
+const InstallerReleaseUrl = "https://api.github.com/repos/estrogencat/Equilotl/releases/latest"
 const InstallerReleaseUrlFallback = "https://equicord.org/releases/equilotl"
 
 var UserAgent = "Equilotl/" + buildinfo.InstallerGitHash + " (https://github.com/Equicord/Equilotl)"
