@@ -11,7 +11,7 @@ import (
 	"image/color"
 )
 
-const ReleaseUrl = "https://github.com/estrogencat/Equicord-RPCStats/releases/latest"
+const ReleaseUrl = "https://api.github.com/repos/estrogencat/Equicord-RPCStats/releases/latest"
 const ReleaseUrlFallback = "https://equicord.org/releases/equicord"
 const InstallerReleaseUrl = "https://api.github.com/repos/Equicord/Equilotl/releases/latest"
 const InstallerReleaseUrlFallback = "https://equicord.org/releases/equilotl"
