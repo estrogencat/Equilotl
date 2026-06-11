@@ -6,7 +6,7 @@ on:
     tags:
       - v*
   schedule:
-    - cron: "30 0 */31 * *"
+    - cron: "30 0 */14 * *"
   workflow_dispatch: 
 
 env:
